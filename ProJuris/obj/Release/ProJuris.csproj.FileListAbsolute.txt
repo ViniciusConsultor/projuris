@@ -1,0 +1,12 @@
+D:\Tiago\Projetos\ProJuris\ProJuris\bin\Release\ProJuris.exe
+D:\Tiago\Projetos\ProJuris\ProJuris\bin\Release\ProJuris.pdb
+D:\Tiago\Projetos\ProJuris\ProJuris\bin\Release\BaseCore.exe
+D:\Tiago\Projetos\ProJuris\ProJuris\bin\Release\Interop.SQLDMO.dll
+D:\Tiago\Projetos\ProJuris\ProJuris\bin\Release\BaseCore.pdb
+D:\Tiago\Projetos\ProJuris\ProJuris\obj\Release\ResolveAssemblyReference.cache
+D:\Tiago\Projetos\ProJuris\ProJuris\obj\Release\ProJuris.Principal.resources
+D:\Tiago\Projetos\ProJuris\ProJuris\obj\Release\ProJuris.Properties.Resources.resources
+D:\Tiago\Projetos\ProJuris\ProJuris\obj\Release\ProJuris.Teste.resources
+D:\Tiago\Projetos\ProJuris\ProJuris\obj\Release\ProJuris.csproj.GenerateResource.Cache
+D:\Tiago\Projetos\ProJuris\ProJuris\obj\Release\ProJuris.exe
+D:\Tiago\Projetos\ProJuris\ProJuris\obj\Release\ProJuris.pdb
