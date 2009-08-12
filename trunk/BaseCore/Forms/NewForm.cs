@@ -29,9 +29,7 @@ namespace BaseCore
         public DataGridViewRow CurrentRow { get; set; }
         public string Id { get; set; }
         #endregion
-
-		private SqlConnection conn = new SqlConnection("Server=.;DataBase=ProJuris;Integrated Security=SSPI");
-        private SqlCommand cmd = new SqlCommand();
+       
 
         public NewForm()
         {
@@ -43,54 +41,64 @@ namespace BaseCore
             DialogResult r = MessageBox.Show("Deseja realmente excluir o registro selecionado?", "Aviso", MessageBoxButtons.OKCancel);
             if (r == DialogResult.OK)
             {
-                conn.Open();
-                cmd.CommandText = "exec " + Procedure + " " + "@operacao=" + Operacao + " ,@id =" + this.Id.ToString();
-                cmd.Connection = conn;
-                cmd.ExecuteNonQuery();
-                if (conn != null)
-                {
-                    conn.Close();
-                }
+				Dictionary<string, object> dic = new Dictionary<string, object>();
+				dic.Add("id",Id);
+				dic.Add("Operacao", "d");
+				StoredProcedure proc = new StoredProcedure(Procedure);
+				proc.addParameter(dic);
+				proc.executeProcedure();
                 base.Close();
+                
                 ReloadNoGrid();
             }
         }
 
-        public string montaStringProcedure()
+        public StoredProcedure montaProcedure()
         {
+			//vai conter nomeDoCampo e valor
+			Dictionary<string, object> dic = new Dictionary<string, object>();
+			//Objeto Procedure
+			BaseCore.StoredProcedure proc = new BaseCore.StoredProcedure(Procedure);
+            
             StringBuilder sbuilder = new StringBuilder("exec " + Procedure + " " + "@operacao=" + Operacao + ", ");
+            //operacao de update
             if (Operacao == "u")
-                sbuilder.Append("@id=" + Id + ", ");
-
-            string ParamNomeValor = "";
-            foreach (Control ctrl in base.Controls)
             {
-                if (ctrl.GetType() == typeof(TextBox))
-                {
-                    ParamNomeValor = "@" + ctrl.Name + "='" + ctrl.Text;
-                    sbuilder.Append(ParamNomeValor + "', ");
-                }
-                else if (ctrl.GetType() == typeof(ComboBox))
-                {
-                    ParamNomeValor = "@" + (ctrl as ComboBox).Name + "='" + (ctrl as ComboBox).getSelectedValue().ToString();
-                    sbuilder.Append(ParamNomeValor + "', ");
-                }
-                else if (ctrl.GetType() == typeof(DateTimePicker))
-                {
-                    ParamNomeValor = "@" + (ctrl as DateTimePicker).Name + "='" + (ctrl as DateTimePicker).Value;
-                    sbuilder.Append(ParamNomeValor + "', ");
-                }
-                else if (ctrl.GetType() == typeof(MaskedTextBox))
-                {
-					ParamNomeValor = "@" + ctrl.Name + "='" + ctrl.Text;
-					sbuilder.Append(ParamNomeValor + "', ");
-                }
+                dic.Add("id",Id);
+				dic.Add("operacao", Operacao);
+			}
+			//operacao de insert
+			else
+			{
+				dic.Add("operacao", Operacao);
+			}
+				
+            //string ParamNomeValor = "";
+            foreach (Control ctrl in base.Controls)
+            {				
+				if (ctrl.GetType() == typeof(TextBox))
+				{
+					dic.Add(ctrl.Name,ctrl.Text);					
+				}
+				else if (ctrl.GetType() == typeof(ComboBox))
+				{
+					dic.Add(ctrl.Name, ctrl.Text);
+				}
+				else if (ctrl.GetType() == typeof(DateTimePicker))
+				{
+					dic.Add(ctrl.Name, (ctrl as DateTimePicker).Value);
+				}
+				else if (ctrl.GetType() == typeof(MaskedTextBox))
+				{
+					dic.Add(ctrl.Name, ctrl.Text);
+				
+				}
+				
 
             }
-            //remove a ultima virgula
-            sbuilder.Remove(sbuilder.Length - 2, 2);
-
-            return sbuilder.ToString();
+            proc.addParameter(dic);         
+		
+            return proc;
         }
 
         public bool ValidarCampos()
@@ -160,8 +168,8 @@ namespace BaseCore
         private void getCampos()
         {
 
-            conn.Open();
-            cmd.CommandText = "se";
+			//conn.Open();
+			//cmd.CommandText = "se";
         }
 
         private void insertUpdateOperation()
@@ -169,12 +177,10 @@ namespace BaseCore
 		    bool erro = false;
             if (ValidarCampos())
             {
-                conn.Open();
-                cmd.CommandText = montaStringProcedure();
-                cmd.Connection = conn;
-				try
+				StoredProcedure proc = montaProcedure();               
+              	try
 				{
-					cmd.ExecuteNonQuery();
+					proc.executeProcedure();
 				}
 				catch (Exception e)
 				{
@@ -185,10 +191,7 @@ namespace BaseCore
 						MessageBox.Show("Erro no cadastro. Verifique os dados preenchidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
                 
-                if (conn != null)
-                {
-                    conn.Close();
-                }
+               
                 if (!erro)
                 base.Close();
             }
@@ -229,14 +232,18 @@ namespace BaseCore
                 {
                     foreach (Control ctrl in base.Controls)
                     {
-                        if (cel.OwningColumn.Name == ctrl.Name && ctrl.GetType() == typeof(TextBox))
+                        if (cel.OwningColumn.Name.ToLower() == ctrl.Name.ToLower() && ctrl.GetType() == typeof(TextBox))
                         {
                             (ctrl as TextBox).Text = cel.Value.ToString();
                         }
-                        else if (cel.OwningColumn.Name == ctrl.Name && ctrl.GetType() == typeof(ComboBox))
+						else if (cel.OwningColumn.Name.ToLower() == ctrl.Name.ToLower() && ctrl.GetType() == typeof(ComboBox))
                         {
                             (ctrl as ComboBox).setValue(cel.Value.ToString());
                         }
+						else if (cel.OwningColumn.Name.ToLower() == ctrl.Name.ToLower() && ctrl.GetType() == typeof(MaskedTextBox))
+						{
+							(ctrl as MaskedTextBox).Text= cel.Value.ToString();
+						}
 
                     }
                 }

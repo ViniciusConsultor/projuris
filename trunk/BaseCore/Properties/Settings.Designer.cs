@@ -47,7 +47,7 @@ namespace BaseCore.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"Server=.;DataBase=ProJuris;Integrated Security=SSPI\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Server=.;DataBase=ProJuris;Integrated Security=SSPI")]
         public string ConnectionString {
             get {
                 return ((string)(this["ConnectionString"]));

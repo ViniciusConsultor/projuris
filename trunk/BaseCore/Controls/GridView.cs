@@ -127,9 +127,7 @@ namespace BaseCore
             {
                 //
             }
-
         }
-         //   carregaDataSet();
         private void GridView_Load(object sender, EventArgs e)
         {
         try
@@ -182,18 +180,21 @@ namespace BaseCore
 
         private void btnAbrir_Click(object sender, EventArgs e)
         {
-            ficha = geraNovoForm();
-            //string id = dataGridView.CurrentRow.Cells["id"].Value.ToString();
-            ficha.Id = dataGridView.CurrentRow.Cells["id"].Value.ToString();
-            ficha.CurrentRow = dataGridView.CurrentRow;
-            ficha.Operacao = "u";
-            object currentRow = Utilities.GetRow(String.Format("select * from {0} where id={1}",Table,ficha.Id));
-            
-            //Setando o text do form de acordo com o Genero.
-            String nome = ficha.Text.Substring(0, 1);
-            if (nome == "a") ficha.Text = "Editando a " + ficha.Text.Substring(2);
-            if (nome == "o") ficha.Text = "Editando o " + ficha.Text.Substring(2);
-            Utilities.OpenMPSForm(ficha);            
+			if (this.dataGridView.SelectedCells.Count != 0)
+			{        
+				ficha = geraNovoForm();
+				//string id = dataGridView.CurrentRow.Cells["id"].Value.ToString();
+				ficha.Id = dataGridView.CurrentRow.Cells["id"].Value.ToString();
+				ficha.CurrentRow = dataGridView.CurrentRow;
+				ficha.Operacao = "u";
+				object currentRow = Utilities.GetRow(String.Format("select * from {0} where id={1}",Table,ficha.Id));
+	            
+				//Setando o text do form de acordo com o Genero.
+				String nome = ficha.Text.Substring(0, 1);
+				if (nome == "a") ficha.Text = "Editando a " + ficha.Text.Substring(2);
+				if (nome == "o") ficha.Text = "Editando o " + ficha.Text.Substring(2);
+				Utilities.OpenMPSForm(ficha);
+            }            
         }
 
         private void btnExcluir_Click(object sender, EventArgs e)
@@ -230,14 +231,15 @@ namespace BaseCore
 
 		private void dataGridView_KeyPress(object sender, KeyPressEventArgs e)
 		{					
-						if (this.dataGridView.CurrentCell == null) MessageBox.Show("Selecione uma Coluna para efetuar a busca.","Aviso",MessageBoxButtons.OK,MessageBoxIcon.Information);
-						else {
-						this.txtFiltro.Visible = true;
-						this.lblFiltroColuna.Visible = true;
-						this.txtFiltro.Text = e.KeyChar.ToString();
-						this.txtFiltro.Select();
-						this.txtFiltro.Select(1,0);					
-						}		
+			if (this.dataGridView.CurrentCell == null) MessageBox.Show("Selecione uma Coluna para efetuar a busca.","Aviso",MessageBoxButtons.OK,MessageBoxIcon.Information);
+			else
+			 {
+				this.txtFiltro.Visible = true;
+				this.lblFiltroColuna.Visible = true;
+				this.txtFiltro.Text = e.KeyChar.ToString();
+				this.txtFiltro.Select();
+				this.txtFiltro.Select(1,0);					
+			}		
 		}
 
 
