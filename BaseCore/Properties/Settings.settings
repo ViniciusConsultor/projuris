@@ -9,7 +9,7 @@
       <Value Profile="(Default)">http://www.bronzebusiness.com.br/webservices/wscep.asmx</Value>
     </Setting>
     <Setting Name="ConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"Server=.;DataBase=ProJuris;Integrated Security=SSPI"</Value>
+      <Value Profile="(Default)">Server=.;DataBase=ProJuris;Integrated Security=SSPI</Value>
     </Setting>
   </Settings>
 </SettingsFile>
